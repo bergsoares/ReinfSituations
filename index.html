@@ -166,10 +166,10 @@
       text-align: center;
     }
 
-    /* Sumário grid ajustado para 5 colunas */
+    /* Sumário grid — 4 colunas para 7 cenários */
     .sumario-grid-5 {
       display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 0.52em;
       margin-top: 0.62em;
     }
@@ -310,33 +310,12 @@
           <div class="num">06</div>
         </a>
 
-        <div class="sumario-card wip">
-          <span class="icon"><i data-lucide="clock"></i></span>
-          <div class="title">Em breve</div>
+        <a class="sumario-card" href="#/testes-api">
+          <span class="icon"><i data-lucide="flask-conical"></i></span>
+          <div class="title">Testes da API REINF</div>
           <div class="num">07</div>
-          <div class="tag-wip">em construção</div>
-        </div>
+        </a>
 
-        <div class="sumario-card wip">
-          <span class="icon"><i data-lucide="clock"></i></span>
-          <div class="title">Em breve</div>
-          <div class="num">08</div>
-          <div class="tag-wip">em construção</div>
-        </div>
-
-        <div class="sumario-card wip">
-          <span class="icon"><i data-lucide="clock"></i></span>
-          <div class="title">Em breve</div>
-          <div class="num">09</div>
-          <div class="tag-wip">em construção</div>
-        </div>
-
-        <div class="sumario-card wip">
-          <span class="icon"><i data-lucide="clock"></i></span>
-          <div class="title">Em breve</div>
-          <div class="num">10</div>
-          <div class="tag-wip">em construção</div>
-        </div>
 
       </div>
     </section>
@@ -892,6 +871,156 @@
     </section>
 
     <!-- ═══════════════════════════════════════════════════════════════════
+      CENÁRIO 07 — TESTES DA API REINF
+    ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 07 — Abertura de seção -->
+    <section data-background-color="#04091b" data-background-gradient="radial-gradient(ellipse 80% 50% at 50% 50%, rgba(56,200,250,0.08) 0%, transparent 60%)">
+      <div class="section-orb section-orb-1" style="--orb-color: rgba(56,200,250,0.15);"></div>
+      <div class="section-orb section-orb-2" style="--orb-color: rgba(0,221,179,0.12);"></div>
+      <div class="section-page-container">
+        <div class="section-page-label text-blue">Cenário 07</div>
+        <h2 class="section-page-title gradient-text">Testes<br/>da API REINF</h2>
+        <p class="section-page-desc">Duas formas de testar o serviço — nossa API/Banco vs. Receita Federal diretamente</p>
+        <div class="section-page-icon text-blue"><i data-lucide="flask-conical"></i></div>
+      </div>
+    </section>
+
+    <!-- 07 — Conteúdo: /Teste vs /Teste/rfb -->
+    <section id="testes-api" data-transition="fade">
+      <div class="section-cosmos"></div>
+      <div class="section-header">
+        <span class="section-icon"><i data-lucide="flask-conical"></i></span>
+        <span class="section-label">07 / Testes da API REINF</span>
+      </div>
+      <h2>Testando a <span class="accent">API REINF</span> — dois níveis</h2>
+
+      <div class="two-cols" style="gap:1.2em; align-items:start;">
+
+        <!-- Coluna 1 — /Teste (API + Banco) -->
+        <div>
+          <div class="scenario-badge" style="color:var(--accent-green); background:rgba(0,221,179,0.08); border-color:rgba(0,221,179,0.2);">
+            <i data-lucide="server"></i>&nbsp; Teste 1 — API &amp; Banco de Dados
+          </div>
+
+          <div class="card" style="border-color:rgba(0,221,179,0.3); padding:0.65em 0.85em; margin-bottom:0.5em;">
+            <div style="display:flex; align-items:center; gap:0.5em; margin-bottom:0.25em;">
+              <span style="color:var(--accent-green); font-size:0.85em;"><i data-lucide="globe"></i></span>
+              <code style="font-family:'JetBrains Mono',monospace; font-size:0.58em; color:var(--accent-green);">reinf.fortesdoc.com.br/Teste</code>
+            </div>
+            <p style="font-size:0.6em; margin:0; color:var(--text-secondary);">
+              Verifica se o <strong>serviço está no ar</strong> e se a <strong>conexão com o banco de dados</strong> está funcionando corretamente.
+              Útil para descartar problema de infraestrutura antes de chegar à RFB.
+            </p>
+          </div>
+
+          <div class="fragment" style="margin-bottom:0.4em;">
+            <p style="font-family:'JetBrains Mono',monospace; font-size:0.48em; color:var(--accent-green); margin-bottom:0.3em;">✔ Retorno esperado — serviço saudável</p>
+            <img src="resources/images/teste-teste.png" alt="Resultado do endpoint /Teste" class="zoom-img"
+              style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(0,221,179,0.3); box-shadow:0 4px 20px rgba(0,221,179,0.1);" />
+          </div>
+
+          <div class="solution-box fragment">
+            <strong style="color:var(--accent-green);">✔ Quando usar</strong><br/>
+            Primeiro passo em qualquer diagnóstico — confirma que <strong>nosso serviço</strong> está operacional antes de partir para testes com a Receita.
+          </div>
+        </div>
+
+        <!-- Coluna 2 — /Teste/rfb (Receita Federal) -->
+        <div>
+          <div class="scenario-badge" style="color:var(--accent-blue); background:rgba(56,200,250,0.08); border-color:rgba(56,200,250,0.2);">
+            <i data-lucide="landmark"></i>&nbsp; Teste 2 — Receita Federal Direto
+          </div>
+
+          <div class="card" style="border-color:rgba(56,200,250,0.3); padding:0.65em 0.85em; margin-bottom:0.5em;">
+            <div style="display:flex; align-items:center; gap:0.5em; margin-bottom:0.25em;">
+              <span style="color:var(--accent-blue); font-size:0.85em;"><i data-lucide="globe"></i></span>
+              <code style="font-family:'JetBrains Mono',monospace; font-size:0.58em; color:var(--accent-blue);">reinf.fortesdoc.com.br/Teste/rfb</code>
+            </div>
+            <p style="font-size:0.6em; margin:0; color:var(--text-secondary);">
+              Chama o <strong>webservice da Receita Federal</strong> diretamente a partir do nosso servidor.
+              Confirma se a <strong>comunicação entre nosso serviço e a RFB</strong> está disponível.
+            </p>
+          </div>
+
+          <div class="fragment" style="margin-bottom:0.4em;">
+            <p style="font-family:'JetBrains Mono',monospace; font-size:0.48em; color:var(--accent-blue); margin-bottom:0.3em;">✔ Retorno esperado — comunicação com a RFB OK</p>
+            <img src="resources/images/teste-RFB.png" alt="Resultado do endpoint /Teste/rfb" class="zoom-img"
+              style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(56,200,250,0.3); box-shadow:0 4px 20px rgba(56,200,250,0.1);" />
+          </div>
+
+          <div class="alert-box fragment" style="border-left-color:var(--accent-blue); background:rgba(56,200,250,0.05);">
+            <strong style="color:var(--accent-blue);">ℹ Quando usar</strong><br/>
+            Quando o <strong>/Teste</strong> retornou OK, mas eventos ainda não chegam à RFB — descarta problema de conectividade entre nosso servidor e a Receita.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 07.2 — Eventos em Processamento -->
+    <section data-transition="fade">
+      <div class="section-cosmos"></div>
+      <div class="section-header">
+        <span class="section-icon"><i data-lucide="flask-conical"></i></span>
+        <span class="section-label">07 / Testes da API REINF — Eventos em Processamento</span>
+      </div>
+      <h2>Eventos em <span class="accent">Processamento</span> — o que significa</h2>
+
+      <div class="two-cols" style="gap:1.2em; align-items:start;">
+        <div>
+
+          <div class="scenario-badge" style="color:var(--accent-gold); background:rgba(255,205,71,0.08); border-color:rgba(255,205,71,0.2);">
+            <i data-lucide="loader"></i>&nbsp; Status: Em Processamento
+          </div>
+
+          <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-text">Evento foi enviado ao nosso serviço e <strong>encaminhado à Receita Federal</strong></div>
+          </div>
+          <div class="flow-step fragment">
+            <div class="flow-num">2</div>
+            <div class="flow-text">A RFB <strong>recebeu o lote</strong> e retornou o protocolo de processamento assíncrono</div>
+          </div>
+          <div class="flow-step fragment">
+            <div class="flow-num">3</div>
+            <div class="flow-text">Nosso serviço <strong>aguarda a resposta final</strong> — o resultado é consultado periodicamente</div>
+          </div>
+          <div class="flow-step fragment">
+            <div class="flow-num">4</div>
+            <div class="flow-text">Enquanto não há resposta, o painel exibe o status <em style="color:var(--accent-gold);">"Em Processamento"</em></div>
+          </div>
+
+          <div class="warning-box fragment" style="margin-top:0.6em;">
+            <strong style="color:var(--accent-gold);">⚠ Quando se torna problema</strong><br/>
+            Se o status <strong>"Em Processamento" não avança por mais de 1 hora</strong>, pode indicar instabilidade na RFB, problema de comunicação ou evento preso — verificar com <code>/Teste/rfb</code>.
+          </div>
+
+        </div>
+
+        <div>
+          <div class="fragment">
+            <p style="font-family:'JetBrains Mono',monospace; font-size:0.48em; color:var(--accent-gold); margin-bottom:0.3em;">⏳ Painel com evento em processamento</p>
+            <img src="resources/images/evento-proce.png" alt="Evento em processamento no painel REINF" class="zoom-img"
+              style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(255,205,71,0.3); box-shadow:0 4px 20px rgba(255,205,71,0.1);" />
+          </div>
+
+          <div class="definition fragment" style="margin-top:0.6em;">
+            <p style="font-size:0.72em; margin:0;">
+              <strong style="color:var(--accent-blue);">Fluxo de diagnóstico:</strong><br/>
+              <span style="color:var(--text-secondary);">
+                ① Verificar <code>/Teste</code> → nosso serviço OK?<br/>
+                ② Verificar <code>/Teste/rfb</code> → comunicação com RFB OK?<br/>
+                ③ Ambos OK + evento preso → acionar SOS (<strong>"Enviar Novamente"</strong>)<br/>
+                ④ <code>/Teste/rfb</code> com erro → instabilidade na RFB, aguardar
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
       SLIDE FINAL — ENCERRAMENTO
     ════════════════════════════════════════════════════════════════════ -->
     <section id="conclusao" data-background-color="#04091b" data-background-image="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2Fmc2hqbzFsNnB1cm1ubDVwZWdxeWFlMHF3Z3psajBlemgwa3RxOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XbT8b0H8vDk52/giphy.gif" data-background-size="cover" data-background-position="center" data-background-opacity="0.06">
@@ -901,8 +1030,7 @@
         <div class="section-page-label text-green">Obrigado!</div>
         <h2 class="section-page-title gradient-text" style="font-size:2.8em;">REINF</h2>
         <p class="section-page-desc" style="font-size:0.82em; max-width:700px;">
-          Situações Diversas — conteúdo em construção.<br/>
-          Mais cenários serão adicionados conforme levantamento.
+          7 cenários de diagnóstico e solução para suporte EFD-REINF.
         </p>
         <div style="display:flex; gap:0.6em; margin-top:0.8em; flex-wrap:wrap; justify-content:center;">
           <span class="tag orange">01 · CNPJ Matriz Divergente</span>
@@ -911,7 +1039,7 @@
           <span class="tag blue">04 · Mudança para Produção</span>
           <span class="tag" style="color:var(--accent-gold); background:rgba(255,205,71,0.1); border-color:rgba(255,205,71,0.2);">05 · SOS no Painel REINF</span>
           <span class="tag blue">06 · Artefatos no Chamado</span>
-          <span class="tag" style="opacity:0.4;">07–10 · Em breve</span>
+          <span class="tag blue">07 · Testes da API REINF</span>
         </div>
         <div class="capa-divider" style="margin-top:1em;"></div>
         <div class="author-badge" style="margin-top:0.5em;">
