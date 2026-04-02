@@ -1,4 +1,5 @@
 # REINF - Situações Diversas
+https://bergsoares.github.io/ReinfSituations/#/capa
 
 Apresentação técnica para capacitar a equipe de suporte no diagnóstico e resolução de cenários incomuns da EFD-REINF dentro do sistema Fortes Fiscal (AC).
 
