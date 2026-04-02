@@ -78,4 +78,4 @@ apresentacao-reinf-situacoes/
 
 ## Autor
 
-**Berg Soares** — Desenvolvedor Fiscal · Abril 2026
+**Berg Soares** — Suporte Técnico Fiscal · Abril 2026

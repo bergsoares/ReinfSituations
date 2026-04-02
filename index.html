@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REINF - Situações Diversas | 2026</title>
+  <meta name="description" content="Cenários incomuns da EFD-REINF que o suporte raramente vê — diagnóstico e solução." />
+
+  <!-- Reveal.js -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+
+  <!-- Custom Theme -->
+  <link rel="stylesheet" href="css/custom.css" />
+
+  <style>
+    /* ── Ajustes específicos desta apresentação ── */
+
+    /* ── Zoom de lupa nas imagens dos slides ── */
+    .zoom-img {
+      cursor: zoom-in;
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  box-shadow 0.35s ease;
+      position: relative;
+      z-index: 1;
+      display: block;
+    }
+
+    .zoom-img:hover {
+      transform: scale(2.2);
+      box-shadow: 0 12px 60px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(0,221,179,0.4);
+      z-index: 9999 !important;
+      position: relative;
+    }
+
+    /* Garante que o pai não corte o filho com overflow */
+    .reveal .slides section,
+    .reveal .slides section > *,
+    .solution-box,
+    .alert-box,
+    .warning-box,
+    .card,
+    .two-cols,
+    .two-cols > div {
+      overflow: visible !important;
+    }
+    .alert-box {
+      background: rgba(255, 92, 122, 0.07);
+      border: 1px solid rgba(255, 92, 122, 0.28);
+      border-left: 3px solid var(--accent-red);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 0.7em 1em;
+      font-size: 0.78em;
+      color: var(--text-secondary);
+    }
+
+    .solution-box {
+      background: rgba(0, 221, 179, 0.06);
+      border: 1px solid rgba(0, 221, 179, 0.25);
+      border-left: 3px solid var(--accent-green);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 0.7em 1em;
+      font-size: 0.78em;
+      color: var(--text-secondary);
+    }
+
+    .warning-box {
+      background: rgba(255, 205, 71, 0.06);
+      border: 1px solid rgba(255, 205, 71, 0.25);
+      border-left: 3px solid var(--accent-gold);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 0.7em 1em;
+      font-size: 0.78em;
+      color: var(--text-secondary);
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.8em;
+      padding: 0.5em 0;
+    }
+
+    .flow-num {
+      flex-shrink: 0;
+      width: 1.6em;
+      height: 1.6em;
+      border-radius: 50%;
+      background: var(--gradient-main);
+      color: var(--bg-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7em;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flow-num.red {
+      background: var(--gradient-warm);
+    }
+
+    .flow-text {
+      font-size: 0.75em;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      padding-top: 0.1em;
+    }
+
+    .scenario-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4em;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.5em;
+      color: var(--accent-orange);
+      background: rgba(255, 120, 73, 0.08);
+      border: 1px solid rgba(255, 120, 73, 0.2);
+      border-radius: 999px;
+      padding: 0.3em 0.9em;
+      margin-bottom: 0.4em;
+    }
+
+    .cnpj-compare {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0.5em;
+      align-items: center;
+      margin: 0.5em 0;
+    }
+
+    .cnpj-box {
+      background: rgba(9, 16, 42, 0.9);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.5em 0.7em;
+      text-align: center;
+    }
+
+    .cnpj-box .label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.48em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.2em;
+    }
+
+    .cnpj-box .value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62em;
+      font-weight: 600;
+    }
+
+    .cnpj-box.mismatch {
+      border-color: rgba(255, 92, 122, 0.4);
+      background: rgba(255, 92, 122, 0.05);
+    }
+
+    .cnpj-box.mismatch .value { color: var(--accent-red); }
+    .cnpj-box.ok .value { color: var(--accent-green); }
+
+    .vs-icon {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1em;
+      color: var(--accent-red);
+      text-align: center;
+    }
+
+    /* Sumário grid ajustado para 5 colunas */
+    .sumario-grid-5 {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.52em;
+      margin-top: 0.62em;
+    }
+
+    /* Para slides com WIP */
+    .wip-overlay {
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .sumario-card.wip {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .sumario-card.wip:hover {
+      transform: none;
+      border-color: var(--border-subtle);
+      box-shadow: none;
+      background: rgba(9,16,42,0.8);
+    }
+
+    .sumario-card.wip::after { display: none; }
+
+    .tag-wip {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.42em;
+      color: var(--text-muted);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid var(--border-subtle);
+      border-radius: 4px;
+      padding: 0.1em 0.4em;
+      margin-top: 0.25em;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── Fundo global ── -->
+<div class="nebula"></div>
+<div class="starfield" id="starfield"></div>
+
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+      SLIDE 1 — CAPA
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="capa" data-background-color="#0a0e1a" data-background-image="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExNzVrNGhqams1Nmc0NmNiOHYxa25sZ3h6MjRuMDliODY1bHZ5Z3ZhcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/106XnXQnjiCeD6/giphy.gif" data-background-size="cover" data-background-position="center" data-background-opacity="0.06">
+      <div class="particles" id="particles"></div>
+      <div class="hero-orb hero-orb-1"></div>
+      <div class="hero-orb hero-orb-2"></div>
+      <div class="slide-capa">
+        <div class="capa-eyebrow">◈ Suporte Técnico &nbsp;•&nbsp; EFD-REINF &nbsp;•&nbsp; Abril 2026</div>
+        <div class="capa-mission-chip">
+          <span class="capa-mission-chip-icon"><i data-lucide="alert-triangle"></i></span>
+          Cenários que o suporte raramente vê
+        </div>
+        <h1 class="capa-title">REINF<br /><span style="color:var(--accent-orange)">Situações Diversas</span></h1>
+        <div class="capa-tagline-main">
+          Diagnóstico e solução de cenários incomuns<br />
+          <span style="color:var(--text-muted)">CNPJ divergente · Licença incompatível · e muito mais</span>
+        </div>
+        <div class="capa-divider"></div>
+        <p class="capa-desc">
+          Situações que fogem do fluxo padrão de atendimento —<br />
+          entenda a causa raiz e como resolver cada uma.
+        </p>
+        <div class="author-badge">
+          <div class="author-avatar"><i data-lucide="user"></i></div>
+          <div>
+            <div class="author-name">Berg Soares</div>
+          </div>
+        </div>
+        <div class="capa-tags">
+          <span class="tag orange">EFD-REINF</span>
+          <span class="tag red">Diagnóstico</span>
+          <span class="tag blue">Suporte</span>
+          <span class="tag">RFB</span>
+          <span class="tag purple">Fiscal</span>
+        </div>
+        <p style="font-family:'JetBrains Mono',monospace; font-size:0.5em; color:var(--text-muted); margin-top:1.3em;">
+          ➡ use as setas do teclado para navegar
+        </p>
+        <div style="text-align:center; margin-top:0.3em;">
+          <img src="resources/images/qrcode-frequencia.png" alt="QR Code Frequência" class="zoom-img"
+            style="width:130px; border-radius:6px; background:#fff; padding:5px; box-shadow:0 4px 20px rgba(0,0,0,0.5);" />
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+      SLIDE 2 — SUMÁRIO INTERATIVO
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="sumario">
+      <div class="section-header">
+        <span class="section-icon"><i data-lucide="layout-list"></i></span>
+        <span class="section-label">Cenários Abordados</span>
+      </div>
+      <h2>Sumário <span class="accent">de Cenários</span></h2>
+      <p style="font-size:0.72em; margin-bottom:0.7em;">Clique em qualquer card para navegar diretamente ao cenário.</p>
+      <div class="sumario-grid-5">
+
+        <a class="sumario-card" href="#/cnpj-divergente">
+          <span class="icon"><i data-lucide="git-compare"></i></span>
+          <div class="title">CNPJ Matriz Divergente</div>
+          <div class="num">01</div>
+        </a>
+
+        <a class="sumario-card" href="#/licenca-incompativel">
+          <span class="icon"><i data-lucide="shield-x"></i></span>
+          <div class="title">Licença Incompatível</div>
+          <div class="num">02</div>
+        </a>
+
+        <a class="sumario-card" href="#/recuperar-vinculo">
+          <span class="icon"><i data-lucide="link-2"></i></span>
+          <div class="title">Recuperar Vínculo REINF</div>
+          <div class="num">03</div>
+        </a>
+
+        <a class="sumario-card" href="#/adesao-producao">
+          <span class="icon"><i data-lucide="arrow-up-circle"></i></span>
+          <div class="title">Mudança para Produção</div>
+          <div class="num">04</div>
+        </a>
+
+        <a class="sumario-card" href="#/sos-painel">
+          <span class="icon"><i data-lucide="shield-alert"></i></span>
+          <div class="title">SOS no Painel REINF</div>
+          <div class="num">05</div>
+        </a>
+
+        <a class="sumario-card" href="#/artefatos-chamado">
+          <span class="icon"><i data-lucide="paperclip"></i></span>
+          <div class="title">Artefatos no Chamado</div>
+          <div class="num">06</div>
+        </a>
+
+        <div class="sumario-card wip">
+          <span class="icon"><i data-lucide="clock"></i></span>
+          <div class="title">Em breve</div>
+          <div class="num">07</div>
+          <div class="tag-wip">em construção</div>
+        </div>
+
+        <div class="sumario-card wip">
+          <span class="icon"><i data-lucide="clock"></i></span>
+          <div class="title">Em breve</div>
+          <div class="num">08</div>
+          <div class="tag-wip">em construção</div>
+        </div>
+
+        <div class="sumario-card wip">
+          <span class="icon"><i data-lucide="clock"></i></span>
+          <div class="title">Em breve</div>
+          <div class="num">09</div>
+          <div class="tag-wip">em construção</div>
+        </div>
+
+        <div class="sumario-card wip">
+          <span class="icon"><i data-lucide="clock"></i></span>
+          <div class="title">Em breve</div>
+          <div class="num">10</div>
+          <div class="tag-wip">em construção</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+      CENÁRIO 01 — CNPJ MATRIZ DIVERGENTE
+    ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 01 — Abertura de seção -->
+    <section data-background-color="#04091b" data-background-gradient="radial-gradient(ellipse 80% 50% at 50% 50%, rgba(255,120,73,0.08) 0%, transparent 60%)">
+      <div class="section-orb section-orb-1" style="--orb-color: rgba(255,120,73,0.15);"></div>
+      <div class="section-orb section-orb-2" style="--orb-color: rgba(255,92,122,0.12);"></div>
+      <div class="section-page-container">
+        <div class="section-page-label text-orange">Cenário 01</div>
+        <h2 class="section-page-title" style="background:var(--gradient-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">CNPJ Matriz<br/>Divergente</h2>
+        <p class="section-page-desc">O CNPJ da empresa no Fortes Fiscal é diferente do que está registrado no serviço da REINF</p>
+        <div class="section-page-icon text-orange"><i data-lucide="git-compare"></i></div>
+      </div>
+    </section>
+
+    <!-- 01 — Conteúdo -->
+    <section id="cnpj-divergente" data-transition="fade">
+      <div class="section-cosmos"></div>
+      <div class="section-header">
+        <span class="section-icon"><i data-lucide="git-compare"></i></span>
+        <span class="section-label">01 / CNPJ Matriz Divergente</span>
+      </div>
+      <h2><span class="accent">CNPJ Matriz</span> — Fortes Fiscal vs REINF</h2>
+
+      <div class="two-cols" style="gap:1.2em; align-items:start;">
+        <div>
+
+          <div class="scenario-badge"><i data-lucide="alert-triangle"></i>&nbsp; Como acontece</div>
+
+          <div class="cnpj-compare">
+            <div class="cnpj-box ok">
+              <div class="label">Fortes Fiscal<br/>(atual)</div>
+              <div class="value" style="color:var(--accent-green);">00.000.000/<strong>0001</strong>-91</div>
+            </div>
+            <div class="vs-icon">≠</div>
+            <div class="cnpj-box mismatch">
+              <div class="label">Serviço REINF<br/>(cadastrado)</div>
+              <div class="value">10.821.992/<strong>0001</strong>-71</div>
+            </div>
+          </div>
+
+          <div class="flow-step fragment">
+            <div class="flow-num">1</div>
+            <div class="flow-text">Empresa aderiu à REINF com o estabelecimento <strong>X</strong> marcado como matriz</div>
+          </div>
+          <div class="flow-step fragment">
+            <div class="flow-num">2</div>
+            <div class="flow-text">Depois, dentro do <strong>cadastro da empresa</strong> no Fortes Fiscal, marcou outro estabelecimento como matriz</div>
+          </div>
+          <div class="flow-step fragment">
+            <div class="flow-num">3</div>
+            <div class="flow-text">O serviço da REINF <strong>continua com o CNPJ antigo</strong> — a adesão não é atualizada automaticamente</div>
+          </div>
+
+        </div>
+
+        <div>
+
+          <!-- Print real: dialog de aviso no painel -->
+          <div class="fragment" style="margin-bottom:0.6em;">
+            <p style="font-family:'JetBrains Mono',monospace; font-size:0.5em; color:var(--accent-red); margin-bottom:0.3em;">⚠ Sintoma — aviso ao abrir o painel</p>
+            <img src="resources/images/cnpj-divergente.png" alt="Dialog de CNPJ divergente no painel REINF" class="zoom-img"
+              style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(255,92,122,0.35); box-shadow:0 4px 20px rgba(255,92,122,0.15);" />
+          </div>
+
+          <div class="alert-box fragment" style="margin-bottom:0.6em; border-left-color:var(--accent-gold); background:rgba(255,205,71,0.05);">
+            <strong style="color:var(--accent-gold);">🔴 Impacto</strong><br/>
+            Qualquer movimentação no painel fica em <strong>processamento infinito</strong> — nenhum evento recebe retorno da Receita Federal.
+          </div>
+
+          <div class="solution-box fragment">
+            <strong style="color:var(--accent-green);">✔ Solução — botão "Atualizar Matriz"</strong><br/>
+            <img src="resources/images/atualizar-matriz.png" alt="Botão Atualizar Matriz" class="zoom-img"
+              style="height:2.2em; vertical-align:middle; margin:0.4em 0; border-radius:4px;" />
+            <br/>
+            O AC envia a atualização ao serviço, que passa a reconhecer o CNPJ correto como matriz.
+            <br/><span style="font-size:0.88em; color:var(--text-muted);">Após atualizar, reabrir o painel para confirmar que o aviso sumiu.</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+      CENÁRIO 02 — LICENÇA INCOMPATÍVEL
+    ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 02 — Abertura de seção -->
+    <section data-background-color="#04091b" data-background-gradient="radial-gradient(ellipse 80% 50% at 50% 50%, rgba(255,92,122,0.08) 0%, transparent 60%)">
+      <div class="section-orb section-orb-1" style="--orb-color: rgba(255,92,122,0.15);"></div>
+      <div class="section-orb section-orb-2" style="--orb-color: rgba(255,120,73,0.12);"></div>
+      <div class="section-page-container">
+        <div class="section-page-label text-orange" style="color:var(--accent-red);">Cenário 02</div>
+        <h2 class="section-page-title" style="background:var(--gradient-warm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Licença<br/>Incompatível</h2>
+        <p class="section-page-desc">A licença atual do Fortes é diferente da que está registrada no serviço da REINF</p>
+        <div class="section-page-icon" style="color:var(--accent-red);"><i data-lucide="shield-x"></i></div>
+      </div>
+    </section>
+
+    <!-- 02 — Conteúdo -->
+    <section id="licenca-incompativel" data-transition="fade">
+      <div class="section-cosmos"></div>
+      <div class="section-header">
+        <span class="section-icon"><i data-lucide="shield-x"></i></span>
+        <span class="section-label">02 / Licença Incompatível</span>
+      </div>
+      <h2><span class="accent">Licença Incompatível</span> — Painel REINF</h2>
+
+      <div class="two-cols" style="gap:1.2em; align-items:start;">
+        <div>
+
+          <div class="scenario-badge"><i data-lucide="alert-triangle"></i>&nbsp; Como acontece</div>
+
+          <div class="cnpj-compare">
+            <div class="cnpj-box ok">
+              <div class="label">Licença Atual<br/>(Fortes Fiscal)</div>
+              <div class="value" style="color:var(--accent-green);">LIC-2026-NOVA</div>
+            </div>
+            <div class="vs-icon">≠</div>
+            <div class="cnpj-box mismatch">
+              <div class="label">Licença no Serviço<br/>(REINF)</div>
+              <div class="value">LIC-2024-ANTIGA</div>
+            </div>
+          </div>
+
+          <div class="flow-step fragment">
+            <div class="flow-num">1</div>
+            <div class="flow-text">Cliente configurou e usou o painel REINF com a <strong>licença A</strong></div>
+          </div>
+          <div class="flow-step fragment">
+            <div class="flow-num">2</div>
+            <div class="flow-text">A licença foi <strong>renovada ou migrada</strong> — o Fortes Fiscal passa a usar a licença B</div>
+          </div>
+          <div class="flow-step fragment">
+            <div class="flow-num">3</div>
+            <div class="flow-text">O serviço da REINF <strong>ainda registra a licença A</strong> — não sincroniza automaticamente</div>
+          </div>
+
+        </div>
+
+        <div>
+
+          <!-- Print real: "Licença Incompatível!!" no topo do painel -->
+          <div class="fragment" style="margin-bottom:0.6em;">
+            <p style="font-family:'JetBrains Mono',monospace; font-size:0.5em; color:var(--accent-red); margin-bottom:0.3em;">⚠ Sintoma — texto clicável no topo do painel</p>
+            <img src="resources/images/licenca-incompativel.png" alt="Licença Incompatível no painel REINF" class="zoom-img"
+              style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(255,92,122,0.35); box-shadow:0 4px 20px rgba(255,92,122,0.15);" />
+            <p style="font-size:0.5em; color:var(--text-muted); margin-top:0.3em; font-family:'JetBrains Mono',monospace;">O texto em vermelho é clicável — essa é a solução.</p>
+          </div>
+
+          <div class="alert-box fragment" style="margin-bottom:0.6em; border-left-color:var(--accent-gold); background:rgba(255,205,71,0.05);">
+            <strong style="color:var(--accent-gold);">🔴 Impacto</strong><br/>
+            Eventos ficam em <strong>processamento</strong> sem retorno ou <strong>nem aparecem</strong> no painel.
+          </div>
+
+          <div class="solution-box fragment">
+            <strong style="color:var(--accent-green);">✔ Solução</strong><br/>
+            Clicar no texto <strong>"Licença Incompatível!!"</strong> no topo do painel.<br/>
+            O Fortes AC solicita ao serviço REINF que atualize para a <strong>licença atual</strong> em uso.
+            <br/><span style="font-size:0.88em; color:var(--text-muted);">Após clicar, o texto some e o painel volta a funcionar normalmente.</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+      CENÁRIO 03 — RECUPERAR VÍNCULO REINF
+    ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 03 — Abertura de seção -->
+    <section data-background-color="#04091b" data-background-gradient="radial-gradient(ellipse 80% 50% at 50% 50%, rgba(146,119,255,0.08) 0%, transparent 60%)">
+      <div class="section-orb section-orb-1" style="--orb-color: rgba(146,119,255,0.15);"></div>
+      <div class="section-orb section-orb-2" style="--orb-color: rgba(56,200,250,0.12);"></div>
+      <div class="section-page-container">
+        <div class="section-page-label text-purple">Cenário 03</div>
+        <h2 class="section-page-title gradient-text-purple">Recuperar<br/>Vínculo REINF</h2>
+        <p class="section-page-desc">Base local sem integração + licença diferente da que está no serviço da REINF</p>
+        <div class="section-page-icon text-purple"><i data-lucide="link-2"></i></div>
+      </div>
+    </section>
+
+    <!-- 03.1 — Problema: sem integração + licença antiga -->
+    <section id="recuperar-vinculo" data-transition="fade">
+      <div class="section-cosmos"></div>
+      <div class="section-header">
+        <span class="section-icon"><i data-lucide="link-2"></i></span>
+        <span class="section-label">03 / Recuperar Vínculo REINF</span>
+      </div>
+      <h2><span class="accent">Recuperar Vínculo</span> — Problema e Diagnóstico</h2>
+
+      <div class="two-cols" style="gap:1.2em; align-items:start;">
+        <div>
+
+          <div class="scenario-badge"><i data-lucide="alert-triangle"></i>&nbsp; Como acontece</div>
+
+          <div class="flow-step">
+            <div class="flow-num red">1</div>
+            <div class="flow-text">Base local do cliente <strong>não está integrada</strong> com o serviço da REINF</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num red">2</div>
+            <div class="flow-text">A <strong>licença atual</strong> do Fortes Fiscal é diferente da que está registrada no serviço da REINF</div>
+          </div>
+          <div class="flow-step fragment">
+            <div class="flow-num">3</div>
+            <div class="flow-text">Ao acessar com o <strong>usuário do cliente</strong>, aparece o diálogo perguntando se deseja realizar a adesão</div>
+          </div>
+          <div class="flow-step fragment">
+            <div class="flow-num">4</div>
+            <div class="flow-text">Ao confirmar, o serviço retorna erro pois <strong>não encontra as informações com a licença atual</strong></div>
+          </div>
+
+          <div class="alert-box fragment" style="margin-top:0.5em;">
+            <strong style="color:var(--accent-red);">⚠ Mensagem de erro</strong><br/>
+            <em style="font-size:0.9em;">"Não encontramos em nossa base de dados as informações da empresa juntamente com sua licença. Entre em contato com nosso suporte técnico. Licenciado anterior: <strong style="color:var(--accent-blue);">30429072000110</strong>"</em>
+          </div>
+
+        </div>
+
+        <div>
+          <p style="font-family:'JetBrains Mono',monospace; font-size:0.5em; color:var(--accent-red); margin-bottom:0.3em;">⚠ Erro retornado ao confirmar</p>
+          <img src="resources/images/licenca-antiga.png" alt="Erro de licença não encontrada" class="zoom-img"
+            style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(255,92,122,0.35); box-shadow:0 4px 20px rgba(255,92,122,0.15);" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 03.2 — Solução: recuperar vínculo via SOS -->
+    <section data-transition="fade">
+      <div class="section-cosmos"></div>
+      <div class="section-header">
+        <span class="section-icon"><i data-lucide="link-2"></i></span>
+        <span class="section-label">03 / Recuperar Vínculo REINF — Solução</span>
+      </div>
+      <h2><span class="accent">Recuperar Vínculo</span> — Passo a Passo</h2>
+
+      <div class="two-cols" style="gap:1.2em; align-items:start;">
+        <div>
+
+          <div class="flow-step">
+            <div class="flow-num">1</div>
+            <div class="flow-text">Entrar no sistema com o usuário <strong>SOS</strong></div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">2</div>
+            <div class="flow-text">Informar o <strong>CNPJ da licença anterior</strong> (exibido na mensagem de erro)</div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num">3</div>
+            <div class="flow-text">Clicar em <strong>"Recuperar Integração"</strong> no diálogo de adesão</div>
+          </div>
+          <div class="flow-step fragment">
+            <div class="flow-num">4</div>
+            <div class="flow-text">O serviço localiza os dados e exibe a confirmação: <em style="color:var(--accent-green);">"Foi encontrado em nossa base de dados as informações da empresa juntamente com a licença informada. Deseja integrar ao serviço da EFD-Reinf com a nova licença?"</em></div>
+          </div>
+          <div class="flow-step fragment">
+            <div class="flow-num">5</div>
+            <div class="flow-text">Ao confirmar, a licença é <strong>atualizada no serviço</strong> e o painel volta a funcionar normalmente</div>
+          </div>
+
+          <div class="solution-box fragment" style="margin-top:0.5em;">
+            <strong style="color:var(--accent-green);">✔ Resultado</strong><br/>
+            O vínculo é recuperado e a nova licença é registrada no serviço da REINF — cliente volta a operar normalmente.
+          </div>
+
+        </div>
+
+        <div>
+          <p style="font-family:'JetBrains Mono',monospace; font-size:0.5em; color:var(--accent-purple); margin-bottom:0.3em;">Sequência de telas — Recuperar Integração</p>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.4em; margin-bottom:0.4em;">
+            <div>
+              <p style="font-family:'JetBrains Mono',monospace; font-size:0.42em; color:var(--text-muted); margin-bottom:0.2em;">Passo 1</p>
+              <img src="resources/images/recuperar-vinculo-1.png" alt="Recuperar vínculo passo 1" class="zoom-img"
+                style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(146,119,255,0.3); box-shadow:0 4px 16px rgba(0,0,0,0.3);" />
+            </div>
+            <div>
+              <p style="font-family:'JetBrains Mono',monospace; font-size:0.42em; color:var(--text-muted); margin-bottom:0.2em;">Passo 2</p>
+              <img src="resources/images/recuperar-vinculo-2.png" alt="Recuperar vínculo passo 2" class="zoom-img"
+                style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(146,119,255,0.3); box-shadow:0 4px 16px rgba(0,0,0,0.3);" />
+            </div>
+          </div>
+          <div>
+            <p style="font-family:'JetBrains Mono',monospace; font-size:0.42em; color:var(--text-muted); margin-bottom:0.2em;">Passo 3 — Confirmação</p>
+            <img src="resources/images/recuperar-vinculo-3.png" alt="Recuperar vínculo passo 3 — confirmação" class="zoom-img"
+              style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(0,221,179,0.3); box-shadow:0 4px 16px rgba(0,221,179,0.12);" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+      CENÁRIO 04 — MUDANÇA PARA PRODUÇÃO
+    ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 04 — Abertura de seção -->
+    <section data-background-color="#04091b" data-background-gradient="radial-gradient(ellipse 80% 50% at 50% 50%, rgba(56,200,250,0.08) 0%, transparent 60%)">
+      <div class="section-orb section-orb-1" style="--orb-color: rgba(56,200,250,0.15);"></div>
+      <div class="section-orb section-orb-2" style="--orb-color: rgba(0,221,179,0.12);"></div>
+      <div class="section-page-container">
+        <div class="section-page-label text-blue">Cenário 04</div>
+        <h2 class="section-page-title gradient-text">Mudança para<br/>Produção</h2>
+        <p class="section-page-desc">"Já existe adesão para o contribuinte" — como diagnosticar e resolver</p>
+        <div class="section-page-icon text-blue"><i data-lucide="arrow-up-circle"></i></div>
+      </div>
+    </section>
+
+    <!-- 04 — Conteúdo -->
+    <section id="adesao-producao" data-transition="fade">
+      <div class="section-cosmos"></div>
+      <div class="section-header">
+        <span class="section-icon"><i data-lucide="arrow-up-circle"></i></span>
+        <span class="section-label">04 / Mudança para Produção</span>
+      </div>
+      <h2><span class="accent">Já existe adesão</span> para o contribuinte</h2>
+
+      <div class="two-cols" style="gap:1.2em; align-items:start;">
+        <div>
+
+          <div class="scenario-badge"><i data-lucide="alert-triangle"></i>&nbsp; Como acontece</div>
+
+          <div class="flow-step">
+            <div class="flow-num red">1</div>
+            <div class="flow-text">Cliente utilizava o ambiente de <strong>Homologação</strong> e tenta realizar a adesão em <strong>Produção</strong></div>
+          </div>
+          <div class="flow-step">
+            <div class="flow-num red">2</div>
+            <div class="flow-text">A RFB retorna: <em style="color:var(--accent-red);">"Já existe adesão para o contribuinte"</em></div>
+          </div>
+
+          <div class="warning-box fragment" style="margin:0.6em 0;">
+            <strong style="color:var(--accent-gold);">⚠ Regra importante</strong><br/>
+            Sempre que aparecer a mensagem <strong>"Já existe adesão"</strong>, o procedimento é:<br/>
+            <strong>Reset do ambiente → Recuperar Vínculo</strong>
+          </div>
+
+          <div class="flow-step fragment">
+            <div class="flow-num">3</div>
+            <div class="flow-text"><strong>Sempre iniciar com o usuário do cliente</strong> — para identificar se há problema de licença</div>
+          </div>
+
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.5em; margin-top:0.3em;">
+            <div class="alert-box fragment">
+              <strong style="color:var(--accent-red);">Se aparecer o licenciado anterior</strong><br/>
+              <span style="font-size:0.9em;">Problema de licença — seguir o fluxo do <strong>Cenário 03</strong> com SOS + CNPJ anterior</span>
+            </div>
+            <div class="solution-box fragment">
+              <strong style="color:var(--accent-green);">Se NÃO aparecer o licenciado anterior</strong><br/>
+              <span style="font-size:0.9em;">Pode recuperar vínculo diretamente com o usuário <strong>SOS</strong></span>
+            </div>
+          </div>
+
+        </div>
+
+        <div>
+          <p style="font-family:'JetBrains Mono',monospace; font-size:0.5em; color:var(--accent-red); margin-bottom:0.3em;">⚠ Sintoma — retorno da tentativa de adesão</p>
+          <img src="resources/images/mudanca-producao.png" alt="Mensagem já existe adesão para o contribuinte" class="zoom-img"
+            style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(255,92,122,0.35); box-shadow:0 4px 20px rgba(255,92,122,0.15); margin-bottom:1em;" />
+
+          <div class="definition">
+            <p style="font-size:0.75em; margin:0;">
+              <strong style="color:var(--accent-blue);">Fluxo resumido:</strong><br/>
+              <span style="color:var(--text-secondary);">
+                ① Reset ambiente de Homologação<br/>
+                ② Acessar com <strong>usuário do cliente</strong><br/>
+                ③ Verificar se exibe licenciado anterior<br/>
+                &nbsp;&nbsp;&nbsp;↳ <span style="color:var(--accent-red);">Sim</span> → usar SOS + CNPJ anterior (Cenário 03)<br/>
+                &nbsp;&nbsp;&nbsp;↳ <span style="color:var(--accent-green);">Não</span> → recuperar vínculo com SOS direto
+              </span>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+      CENÁRIO 05 — SOS NO PAINEL REINF
+    ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 05 — Abertura de seção -->
+    <section data-background-color="#04091b" data-background-gradient="radial-gradient(ellipse 80% 50% at 50% 50%, rgba(255,205,71,0.08) 0%, transparent 60%)">
+      <div class="section-orb section-orb-1" style="--orb-color: rgba(255,205,71,0.15);"></div>
+      <div class="section-orb section-orb-2" style="--orb-color: rgba(255,120,73,0.12);"></div>
+      <div class="section-page-container">
+        <div class="section-page-label" style="color:var(--accent-gold);">Cenário 05</div>
+        <h2 class="section-page-title" style="background:var(--gradient-gold);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">SOS no<br/>Painel REINF</h2>
+        <p class="section-page-desc">Funcionalidades exclusivas do usuário de emergência (SOS) dentro do Painel EFD-REINF</p>
+        <div class="section-page-icon" style="color:var(--accent-gold);"><i data-lucide="shield-alert"></i></div>
+      </div>
+    </section>
+
+    <!-- 05 — Conteúdo -->
+    <section id="sos-painel" data-transition="fade">
+      <div class="section-cosmos"></div>
+      <div class="section-header">
+        <span class="section-icon"><i data-lucide="shield-alert"></i></span>
+        <span class="section-label">05 / SOS no Painel REINF</span>
+      </div>
+      <h2>O que o <span class="accent">usuário SOS</span> vê no Painel</h2>
+
+      <div class="two-cols" style="gap:1em; align-items:start;">
+        <div>
+
+          <div class="scenario-badge" style="color:var(--accent-gold); background:rgba(255,205,71,0.08); border-color:rgba(255,205,71,0.2);">
+            <i data-lucide="shield-alert"></i>&nbsp; Exclusivo para EmergencyUser (SOS)
+          </div>
+
+          <div class="card" style="border-color:rgba(255,205,71,0.25); padding:0.6em 0.8em; margin-bottom:0.45em;">
+            <div style="display:flex; align-items:center; gap:0.5em; margin-bottom:0.2em;">
+              <span style="color:var(--accent-gold); font-size:0.9em;"><i data-lucide="refresh-cw"></i></span>
+              <h3 style="font-size:0.72em; margin:0; color:var(--accent-gold);">Botão "Resetar Ambiente"</h3>
+            </div>
+            <p style="font-size:0.58em; margin:0;">Visível em <strong>Produção</strong> e <strong>Produção Restrita</strong> apenas para SOS. Para usuário comum, só aparece se <code>ServicoReinf.PodeResetarAdesao = true</code> ou sem data de adesão.</p>
+          </div>
+
+          <div class="card" style="border-color:rgba(255,92,122,0.25); padding:0.6em 0.8em; margin-bottom:0.45em;">
+            <div style="display:flex; align-items:center; gap:0.5em; margin-bottom:0.2em;">
+              <span style="color:var(--accent-red); font-size:0.9em;"><i data-lucide="alert-triangle"></i></span>
+              <h3 style="font-size:0.72em; margin:0; color:var(--accent-red);">Banner "Licença Incompatível"</h3>
+            </div>
+            <p style="font-size:0.58em; margin:0;">Banner só fica visível para SOS quando o CNPJ licenciado difere do cliente atual. <strong>Diagnóstico exclusivo de suporte</strong> — usuário comum não vê.</p>
+          </div>
+
+          <div class="card" style="border-color:rgba(56,200,250,0.25); padding:0.6em 0.8em; margin-bottom:0.45em;">
+            <div style="display:flex; align-items:center; gap:0.5em; margin-bottom:0.2em;">
+              <span style="color:var(--accent-blue); font-size:0.9em;"><i data-lucide="key"></i></span>
+              <h3 style="font-size:0.72em; margin:0; color:var(--accent-blue);">Atualizar Licença</h3>
+            </div>
+            <p style="font-size:0.58em; margin:0;">Ação só executa para SOS. Confirma e chama <code>TServicoReinf.AtualizarLicenca</code> com CNPJ + licença atual. Registra auditoria automaticamente.</p>
+          </div>
+
+        </div>
+
+        <div>
+
+          <div class="card" style="border-color:rgba(146,119,255,0.25); padding:0.6em 0.8em; margin-bottom:0.45em;">
+            <div style="display:flex; align-items:center; gap:0.5em; margin-bottom:0.2em;">
+              <span style="color:var(--accent-purple); font-size:0.9em;"><i data-lucide="trash-2"></i></span>
+              <h3 style="font-size:0.72em; margin:0; color:var(--accent-purple);">Limpar Eventos Apenas Localmente</h3>
+            </div>
+            <p style="font-size:0.58em; margin:0;">Menu visível apenas para SOS ou MasterUser. Apaga eventos de apuração <strong>somente na base local</strong>, sem comunicação com a Receita Federal.</p>
+          </div>
+
+          <div class="card" style="border-color:rgba(0,221,179,0.25); padding:0.6em 0.8em; margin-bottom:0.45em;">
+            <div style="display:flex; align-items:center; gap:0.5em; margin-bottom:0.2em;">
+              <span style="color:var(--accent-green); font-size:0.9em;"><i data-lucide="receipt"></i></span>
+              <h3 style="font-size:0.72em; margin:0; color:var(--accent-green);">Recibo de Adesão</h3>
+            </div>
+            <p style="font-size:0.58em; margin:0;">Menu "Recibo de Adesão" visível para SOS em adesões com retorno <code>MS1005</code>, independentemente do retorno atual.</p>
+          </div>
+
+          <div class="card" style="border-color:rgba(255,120,73,0.25); padding:0.6em 0.8em; margin-bottom:0.45em;">
+            <div style="display:flex; align-items:center; gap:0.5em; margin-bottom:0.2em;">
+              <span style="color:var(--accent-orange); font-size:0.9em;"><i data-lucide="send"></i></span>
+              <h3 style="font-size:0.72em; margin:0; color:var(--accent-orange);">Enviar Novamente</h3>
+            </div>
+            <p style="font-size:0.58em; margin:0;">Para SOS, fica visível quando evento está com status <strong>Em Andamento</strong>. Usuário comum só vê se houver mensagem específica de reenvio.</p>
+          </div>
+
+          <div class="warning-box" style="margin-top:0.3em;">
+            <strong style="color:var(--accent-gold);">💡 Resumo</strong><br/>
+            <span style="font-size:0.85em;">O SOS expõe diagnósticos e ações de recuperação que o cliente nunca vê — são ferramentas exclusivas de suporte para situações excepcionais.</span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+      CENÁRIO 06 — ARTEFATOS NO CHAMADO
+    ════════════════════════════════════════════════════════════════════ -->
+
+    <!-- 06 — Abertura de seção -->
+    <section data-background-color="#04091b" data-background-gradient="radial-gradient(ellipse 80% 50% at 50% 50%, rgba(56,200,250,0.08) 0%, transparent 60%)">
+      <div class="section-orb section-orb-1" style="--orb-color: rgba(56,200,250,0.15);"></div>
+      <div class="section-orb section-orb-2" style="--orb-color: rgba(0,221,179,0.12);"></div>
+      <div class="section-page-container">
+        <div class="section-page-label text-blue">Cenário 06</div>
+        <h2 class="section-page-title gradient-text">Artefatos<br/>no Chamado</h2>
+        <p class="section-page-desc">O que coletar e quando anexar no chamado de suporte REINF</p>
+        <div class="section-page-icon text-blue"><i data-lucide="paperclip"></i></div>
+      </div>
+    </section>
+
+    <!-- 06 — Conteúdo -->
+    <section id="artefatos-chamado" data-transition="fade">
+      <div class="section-cosmos"></div>
+      <div class="section-header">
+        <span class="section-icon"><i data-lucide="paperclip"></i></span>
+        <span class="section-label">06 / Artefatos no Chamado</span>
+      </div>
+      <h2>O que anexar no <span class="accent">chamado REINF</span></h2>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:0.8em; margin-top:0.4em;">
+
+        <!-- Card 1 — Imagem do Painel -->
+        <div class="card" style="border-color:rgba(0,221,179,0.35); padding:0.8em 1em;">
+          <div style="text-align:center; margin-bottom:0.5em;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:0.48em; color:var(--accent-green); background:rgba(0,221,179,0.08); border:1px solid rgba(0,221,179,0.2); border-radius:999px; padding:0.2em 0.8em;">01 · Imagem do Painel</span>
+          </div>
+          <img src="resources/images/painel-imagem.png" alt="Imagem do Painel REINF" class="zoom-img"
+            style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(0,221,179,0.25); box-shadow:0 4px 16px rgba(0,0,0,0.3); margin-bottom:0.6em;" />
+          <div class="solution-box" style="padding:0.5em 0.7em;">
+            <strong style="color:var(--accent-green); font-size:0.75em;"><i data-lucide="check-circle"></i> Quando coletar</strong>
+            <p style="font-size:0.62em; margin:0.3em 0 0;">
+              <strong>Sempre</strong> — em <strong>todos</strong> os chamados relacionados à REINF, independente do problema relatado.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 2 — Log AC -->
+        <div class="card" style="border-color:rgba(56,200,250,0.35); padding:0.8em 1em;">
+          <div style="text-align:center; margin-bottom:0.5em;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:0.48em; color:var(--accent-blue); background:rgba(56,200,250,0.08); border:1px solid rgba(56,200,250,0.2); border-radius:999px; padding:0.2em 0.8em;">02 · Log AC</span>
+          </div>
+          <img src="resources/images/logAC.png" alt="Log AC" class="zoom-img"
+            style="width:100%; border-radius:var(--radius-sm); border:1px solid rgba(56,200,250,0.25); box-shadow:0 4px 16px rgba(0,0,0,0.3); margin-bottom:0.6em;" />
+          <div class="highlight-box blue" style="padding:0.5em 0.7em;">
+            <strong style="color:var(--accent-blue); font-size:0.75em;"><i data-lucide="check-circle"></i> Quando coletar</strong>
+            <p style="font-size:0.62em; margin:0.3em 0 0;">
+              Quando houver <strong>problema de acesso ao painel</strong> ou quando <strong>solicitado pelo desenvolvimento</strong>.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 3 — Backup -->
+        <div class="card" style="border-color:rgba(255,120,73,0.35); padding:0.8em 1em;">
+          <div style="text-align:center; margin-bottom:0.5em;">
+            <span style="font-family:'JetBrains Mono',monospace; font-size:0.48em; color:var(--accent-orange); background:rgba(255,120,73,0.08); border:1px solid rgba(255,120,73,0.2); border-radius:999px; padding:0.2em 0.8em;">03 · Backup do Cliente</span>
+          </div>
+          <div style="display:flex; align-items:center; justify-content:center; height:100px; background:rgba(255,120,73,0.04); border:1px solid rgba(255,120,73,0.15); border-radius:var(--radius-sm); margin-bottom:0.6em;">
+            <i data-lucide="database" style="color:var(--accent-orange); width:3em; height:3em;"></i>
+          </div>
+          <div class="highlight-box orange" style="padding:0.5em 0.7em;">
+            <strong style="color:var(--accent-orange); font-size:0.75em;"><i data-lucide="check-circle"></i> Quando coletar</strong>
+            <p style="font-size:0.62em; margin:0.3em 0 0;">
+              Sempre que o problema envolver <strong>valores incorretos</strong> ou divergência de dados nos eventos.
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="warning-box" style="margin-top:0.7em; text-align:center;">
+        <strong style="color:var(--accent-gold);">📎 Regra geral:</strong>
+        <span style="font-size:0.85em;"> Imagem do painel é <strong>obrigatória em todo chamado REINF</strong>. Log e backup são situacionais — colete conforme o tipo de problema.</span>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════
+      SLIDE FINAL — ENCERRAMENTO
+    ════════════════════════════════════════════════════════════════════ -->
+    <section id="conclusao" data-background-color="#04091b" data-background-image="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2Fmc2hqbzFsNnB1cm1ubDVwZWdxeWFlMHF3Z3psajBlemgwa3RxOCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/XbT8b0H8vDk52/giphy.gif" data-background-size="cover" data-background-position="center" data-background-opacity="0.06">
+      <div class="hero-orb hero-orb-1" style="opacity:0.6;"></div>
+      <div class="hero-orb hero-orb-2" style="opacity:0.6;"></div>
+      <div class="section-page-container" style="gap:0.5em;">
+        <div class="section-page-label text-green">Obrigado!</div>
+        <h2 class="section-page-title gradient-text" style="font-size:2.8em;">REINF</h2>
+        <p class="section-page-desc" style="font-size:0.82em; max-width:700px;">
+          Situações Diversas — conteúdo em construção.<br/>
+          Mais cenários serão adicionados conforme levantamento.
+        </p>
+        <div style="display:flex; gap:0.6em; margin-top:0.8em; flex-wrap:wrap; justify-content:center;">
+          <span class="tag orange">01 · CNPJ Matriz Divergente</span>
+          <span class="tag red">02 · Licença Incompatível</span>
+          <span class="tag purple">03 · Recuperar Vínculo REINF</span>
+          <span class="tag blue">04 · Mudança para Produção</span>
+          <span class="tag" style="color:var(--accent-gold); background:rgba(255,205,71,0.1); border-color:rgba(255,205,71,0.2);">05 · SOS no Painel REINF</span>
+          <span class="tag blue">06 · Artefatos no Chamado</span>
+          <span class="tag" style="opacity:0.4;">07–10 · Em breve</span>
+        </div>
+        <div class="capa-divider" style="margin-top:1em;"></div>
+        <div class="author-badge" style="margin-top:0.5em;">
+          <div class="author-avatar"><i data-lucide="user"></i></div>
+          <div>
+            <div class="author-name">Berg Soares</div>
+          </div>
+        </div>
+        <div style="text-align:center; margin-top:0.6em;">
+          <img src="resources/images/qrcode-pesquisa.png" alt="QR Code Pesquisa" class="zoom-img"
+            style="width:130px; border-radius:6px; background:#fff; padding:5px; box-shadow:0 4px 20px rgba(0,0,0,0.5);" />
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+
+<!-- Reveal.js -->
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<!-- Lucide Icons -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<!-- Módulos internos -->
+<script type="module" src="js/main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,999 @@
+/* ============================================================================
+   Apresentação "Claude Code - Na Prática!"
+   Design System: Oceanic Precision
+   Fonts: Bebas Neue (h1/h2) · DM Sans (body) · JetBrains Mono (code)
+   Palette: Bioluminescent Teal · Copilot Violet · Coral Energy · Gold
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@300;400;500;600&family=Exo+2:wght@400;500;600;700&display=swap');
+
+/* ============================================================================
+   CSS Variables — Brand Palette
+   ============================================================================ */
+:root {
+  /* Backgrounds — deep ocean layers */
+  --bg-primary:    #04091b;
+  --bg-secondary:  #09102a;
+  --bg-tertiary:   #0f1c3e;
+  --bg-card:       rgba(9, 16, 42, 0.92);
+
+  /* Text */
+  --text-primary:  #edf2ff;
+  --text-secondary:#7a8fb5;
+  --text-muted:    #384e72;
+
+  /* Brand Accents */
+  --accent-green:  #00ddb3;
+  --accent-blue:   #38c8fa;
+  --accent-purple: #9277ff;
+  --accent-orange: #ff7849;
+  --accent-red:    #ff5c7a;
+  --accent-gold:   #ffcd47;
+
+  /* Borders */
+  --border-glow:   rgba(0, 221, 179, 0.22);
+  --border-subtle: rgba(255, 255, 255, 0.06);
+
+  /* Gradients */
+  --gradient-main:   linear-gradient(135deg, #00ddb3 0%, #38c8fa 100%);
+  --gradient-purple: linear-gradient(135deg, #9277ff 0%, #38c8fa 100%);
+  --gradient-warm:   linear-gradient(135deg, #ff5c7a 0%, #ff7849 100%);
+  --gradient-gold:   linear-gradient(135deg, #ffcd47 0%, #ff7849 100%);
+  --gradient-mesh:   radial-gradient(ellipse 80% 60% at 0% 0%, rgba(124,92,252,0.07) 0%, transparent 60%),
+                     radial-gradient(ellipse 60% 50% at 100% 100%, rgba(56,200,250,0.06) 0%, transparent 55%),
+                     radial-gradient(ellipse 50% 40% at 40% 60%, rgba(0,221,179,0.03) 0%, transparent 65%);
+
+  /* Shadows */
+  --shadow-glow:  0 0 28px rgba(0,221,179,0.18), 0 0 60px rgba(0,221,179,0.07);
+  --shadow-card:  0 4px 24px rgba(0,0,0,0.25), 0 0 1px rgba(255,255,255,0.05);
+
+  /* Radius */
+  --radius:    14px;
+  --radius-sm: 8px;
+}
+
+/* ============================================================================
+   Base
+   ============================================================================ */
+html, body {
+  background: #030508;
+  background-image: var(--gradient-mesh);
+  background-attachment: fixed;
+  min-height: 100%;
+}
+
+.reveal-viewport {
+  background: transparent !important;
+  background-image: none !important;
+  position: relative;
+  z-index: 1;
+}
+
+.reveal {
+  position: relative;
+  z-index: 1;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1.55rem;
+  color: var(--text-primary);
+}
+
+/* ============================================================================
+   Typography
+   ============================================================================ */
+.reveal h1, .reveal h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  line-height: 1.1;
+  text-transform: none;
+  color: var(--text-primary);
+}
+
+.reveal h3, .reveal h4 {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  text-transform: none;
+  color: var(--text-primary);
+}
+
+.reveal h1 {
+  font-size: 2.6em;
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.reveal h2 {
+  font-size: 1.65em;
+  margin-bottom: 0.55em;
+}
+
+.reveal h2 .accent {
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.reveal h3 {
+  font-size: 1.12em;
+  color: var(--accent-blue);
+  font-weight: 600;
+  margin-bottom: 0.4em;
+}
+
+.reveal p {
+  color: var(--text-secondary);
+  line-height: 1.74;
+  font-weight: 400;
+}
+
+.reveal strong { color: var(--text-primary); font-weight: 600; }
+.reveal em     { color: var(--accent-green); font-style: normal; font-weight: 500; }
+.reveal a      { color: var(--accent-blue); text-decoration: none; transition: color 0.2s; }
+.reveal a:hover{ color: var(--accent-green); text-decoration: underline; }
+
+/* ============================================================================
+   Code
+   ============================================================================ */
+.reveal pre {
+  background: rgba(6, 12, 30, 0.96) !important;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  font-family: 'JetBrains Mono', monospace !important;
+  padding: 1.1em 1.4em;
+  line-height: 1.68;
+  max-height: 360px;
+  color: #a9b7d0 !important;
+  box-shadow: var(--shadow-card);
+}
+
+.reveal code {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(0,221,179,0.08);
+  color: var(--accent-green);
+  padding: 0.12em 0.45em;
+  border-radius: 5px;
+  font-size: 0.82em;
+  border: 1px solid rgba(0,221,179,0.15);
+}
+
+.reveal pre code {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+}
+
+/* ============================================================================
+   Lists
+   ============================================================================ */
+.reveal ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.reveal ul li {
+  padding: 0.3em 0 0.3em 1.9em;
+  position: relative;
+  color: var(--text-secondary);
+  font-size: 0.88em;
+}
+
+.reveal ul li::before {
+  content: '▸';
+  position: absolute;
+  left: 0.5em;
+  color: var(--accent-green);
+  font-weight: 700;
+}
+
+/* ============================================================================
+   Tables
+   ============================================================================ */
+.reveal table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72em;
+  margin: 0.6em 0;
+}
+
+.reveal table thead th {
+  background: rgba(0,221,179,0.08);
+  color: var(--text-primary);
+  padding: 0.7em 1em;
+  text-align: left;
+  border-bottom: 2px solid var(--border-glow);
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 600;
+}
+
+.reveal table tbody td {
+  padding: 0.6em 1em;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+}
+
+.reveal table tbody tr:hover td {
+  background: rgba(0,221,179,0.03);
+}
+
+/* ============================================================================
+   Tags
+   ============================================================================ */
+.tag {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6em;
+  padding: 0.3em 0.85em;
+  border-radius: 20px;
+  margin: 0.18em;
+  background: rgba(0,221,179,0.1);
+  color: var(--accent-green);
+  border: 1px solid rgba(0,221,179,0.2);
+}
+.tag.blue   { background: rgba(56,200,250,0.1);  color: var(--accent-blue);   border-color: rgba(56,200,250,0.2); }
+.tag.purple { background: rgba(146,119,255,0.1); color: var(--accent-purple); border-color: rgba(146,119,255,0.2); }
+.tag.orange { background: rgba(255,120,73,0.1);  color: var(--accent-orange); border-color: rgba(255,120,73,0.2); }
+.tag.red    { background: rgba(255,92,122,0.1);  color: var(--accent-red);    border-color: rgba(255,92,122,0.2); }
+
+/* ============================================================================
+   Card Components
+   ============================================================================ */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-glow);
+  border-radius: var(--radius);
+  padding: 1.3em 1.4em;
+  text-align: left;
+  transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255,255,255,0.04);
+  position: relative;
+}
+
+.card:hover {
+  border-color: rgba(0,221,179,0.4);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow);
+}
+
+.card-icon {
+  font-size: 1.8em;
+  display: block;
+  margin-bottom: 0.4em;
+  color: var(--accent-green);
+}
+
+.card-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.8em;
+}
+
+.card-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0.7em;
+}
+
+/* ============================================================================
+   Two Columns Layout
+   ============================================================================ */
+.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5em;
+  align-items: start;
+}
+
+/* ============================================================================
+   Highlight Box
+   ============================================================================ */
+.highlight-box {
+  background: rgba(0,221,179,0.06);
+  border: 1px solid rgba(0,221,179,0.2);
+  border-radius: var(--radius-sm);
+  padding: 0.8em 1.1em;
+  font-size: 0.82em;
+  color: var(--text-secondary);
+}
+
+.highlight-box.blue {
+  background: rgba(56,200,250,0.06);
+  border-color: rgba(56,200,250,0.2);
+}
+
+.highlight-box.orange {
+  background: rgba(255,120,73,0.06);
+  border-color: rgba(255,120,73,0.2);
+}
+
+.highlight-box.purple {
+  background: rgba(146,119,255,0.06);
+  border-color: rgba(146,119,255,0.2);
+}
+
+/* ============================================================================
+   Definition Box
+   ============================================================================ */
+.definition {
+  background: rgba(0,221,179,0.04);
+  border-left: 3px solid var(--accent-green);
+  padding: 0.9em 1.2em;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-size: 0.82em;
+}
+
+/* ============================================================================
+   Section Header
+   ============================================================================ */
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-bottom: 0.8em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6em;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.section-icon { color: var(--accent-green); }
+.section-label { color: var(--text-muted); }
+
+/* ============================================================================
+   Section Page (abertura de seção)
+   ============================================================================ */
+.section-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3em;
+}
+
+.section-page-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55em;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.section-page-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5em;
+  letter-spacing: 0.08em;
+  margin: 0.1em 0;
+}
+
+.section-page-desc {
+  font-size: 0.78em;
+  color: var(--text-secondary);
+  max-width: 600px;
+  text-align: center;
+}
+
+.section-page-icon {
+  font-size: 2.5em;
+  margin-top: 0.3em;
+}
+
+/* ============================================================================
+   Gradient Text & Neon Effects
+   ============================================================================ */
+.gradient-text {
+  background: var(--gradient-main);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-text-purple {
+  background: var(--gradient-purple);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.neon-text {
+  color: var(--accent-green);
+  text-shadow: 0 0 14px rgba(0,221,179,0.6), 0 0 30px rgba(0,221,179,0.25);
+}
+
+.glow-anim {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { box-shadow: 0 0 12px rgba(0,221,179,0.2); }
+  50%      { box-shadow: 0 0 32px rgba(0,221,179,0.52), 0 0 65px rgba(0,221,179,0.18); }
+}
+
+.text-green  { color: var(--accent-green); }
+.text-blue   { color: var(--accent-blue); }
+.text-purple { color: var(--accent-purple); }
+.text-orange { color: var(--accent-orange); }
+
+/* ============================================================================
+   CAPA — Estilos
+   ============================================================================ */
+.slide-capa {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+}
+
+.capa-eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5em;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 0.6em;
+}
+
+.capa-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.2em;
+  letter-spacing: 0.06em;
+  line-height: 1.05;
+  margin: 0.15em 0 0.25em;
+}
+
+.capa-tagline-main {
+  font-size: 0.78em;
+  color: var(--text-secondary);
+  margin-bottom: 0.6em;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.capa-mission-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.52em;
+  color: var(--accent-green);
+  background: rgba(0,221,179,0.08);
+  border: 1px solid rgba(0,221,179,0.2);
+  border-radius: 999px;
+  padding: 0.4em 1em;
+  margin-bottom: 0.5em;
+}
+
+.capa-mission-chip-icon { font-size: 1.1em; }
+
+.copilot-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55em;
+  color: var(--accent-purple);
+  background: rgba(146,119,255,0.08);
+  border: 1px solid rgba(146,119,255,0.2);
+  border-radius: 999px;
+  padding: 0.35em 0.9em;
+  margin: 0.3em 0;
+}
+
+.copilot-icon { font-size: 1em; }
+
+.capa-divider {
+  width: 60px;
+  height: 2px;
+  background: var(--gradient-main);
+  margin: 0.6em 0;
+  border-radius: 2px;
+}
+
+.capa-desc {
+  font-size: 0.62em;
+  color: var(--text-secondary);
+  max-width: 560px;
+  text-align: center;
+}
+
+.author-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  margin: 0.7em 0 0.4em;
+}
+
+.author-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--gradient-main);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bg-primary);
+  font-size: 0.7em;
+}
+
+.author-name {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 0.65em;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.capa-tags {
+  margin-top: 0.5em;
+}
+
+/* ============================================================================
+   SUMÁRIO — Grid Interativo
+   ============================================================================ */
+.sumario-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.52em;
+  margin-top: 0.62em;
+}
+
+.sumario-card {
+  background: rgba(9,16,42,0.8);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 0.86em 0.58em;
+  text-align: center;
+  text-decoration: none;
+  display: block;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  backdrop-filter: blur(10px);
+  position: relative;
+  overflow: hidden;
+}
+
+.sumario-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: var(--gradient-main);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.sumario-card:hover {
+  border-color: rgba(0,221,179,0.35);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-5px);
+  background: rgba(0,221,179,0.04);
+  text-decoration: none;
+}
+
+.sumario-card:hover::after { transform: scaleX(1); }
+
+.sumario-card .icon {
+  font-size: 1.38em;
+  display: block;
+  margin-bottom: 0.18em;
+  color: var(--accent-green);
+}
+
+.sumario-card .title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 0.59em;
+  font-weight: 400;
+  color: var(--text-primary);
+  line-height: 1.16;
+  letter-spacing: 0.03em;
+}
+
+.sumario-card .num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.5em;
+  color: var(--text-muted);
+  margin-top: 0.2em;
+}
+
+/* ============================================================================
+   Icon List
+   ============================================================================ */
+.icon-list {
+  list-style: none;
+  padding: 0;
+}
+
+.icon-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.8em;
+  padding: 0.5em 0;
+}
+
+.icon-list li::before { display: none; }
+
+.icon-list .icon {
+  color: var(--accent-green);
+  font-size: 1.2em;
+  flex-shrink: 0;
+}
+
+/* ============================================================================
+   Nebula — Fixed background
+   ============================================================================ */
+.nebula {
+  position: fixed;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 38% at 12% 18%, rgba(124, 92, 252, 0.10) 0%, transparent 58%),
+    radial-gradient(ellipse 42% 32% at 90% 82%, rgba(56, 200, 250, 0.08) 0%, transparent 58%),
+    radial-gradient(ellipse 65% 48% at 52% 52%, rgba(0, 221, 179, 0.04) 0%, transparent 72%),
+    radial-gradient(ellipse 32% 24% at 74% 12%, rgba(255, 100, 140, 0.03) 0%, transparent 52%);
+  animation: nebula-drift 65s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+@keyframes nebula-drift {
+  0%   { transform: translate(0px, 0px); opacity: 0.80; }
+  30%  { transform: translate(11px, 7px); opacity: 0.95; }
+  60%  { transform: translate(-7px, 14px); opacity: 0.84; }
+  100% { transform: translate(9px, -5px); opacity: 1.00; }
+}
+
+/* ============================================================================
+   Starfield — Three parallax layers
+   ============================================================================ */
+.starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.stars-far {
+  position: absolute;
+  inset: -5%;
+  animation: layer-far 90s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.stars-mid {
+  position: absolute;
+  inset: -5%;
+  animation: layer-mid 65s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.stars-near {
+  position: absolute;
+  inset: -5%;
+  animation: layer-near 48s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes layer-far {
+  0%   { transform: translate(0px, 0px); }
+  50%  { transform: translate(5px, 3px); }
+  100% { transform: translate(-3px, 7px); }
+}
+
+@keyframes layer-mid {
+  0%   { transform: translate(0px, 0px); }
+  50%  { transform: translate(-8px, 5px); }
+  100% { transform: translate(6px, -4px); }
+}
+
+@keyframes layer-near {
+  0%   { transform: translate(0px, 0px); }
+  50%  { transform: translate(10px, -6px); }
+  100% { transform: translate(-5px, 8px); }
+}
+
+/* ============================================================================
+   Individual Stars
+   ============================================================================ */
+.star {
+  position: absolute;
+  border-radius: 50%;
+  animation: twinkle var(--star-dur, 6s) var(--star-del, 0s) infinite ease-in-out;
+}
+
+.star-sm { width: 1px; height: 1px; background: rgba(255, 255, 255, 0.75); }
+.star-md { width: 2px; height: 2px; background: rgba(230, 242, 255, 0.85); }
+.star-lg {
+  width: 3px; height: 3px;
+  background: white;
+  box-shadow: 0 0 4px 1px rgba(200, 225, 255, 0.45);
+}
+
+.star-xl {
+  width: 4px; height: 4px;
+  background: white;
+  animation: star-breathe var(--star-dur, 5s) var(--star-del, 0s) infinite ease-in-out !important;
+}
+
+.star-warm   { background: rgba(255, 218, 165, 0.85) !important; }
+.star-cool   { background: rgba(175, 215, 255, 0.85) !important; }
+.star-violet { background: rgba(210, 185, 255, 0.78) !important; }
+
+@keyframes twinkle {
+  0%, 100% { opacity: var(--star-base, 0.20); }
+  40%      { opacity: calc(var(--star-base, 0.20) * 0.65); }
+  70%      { opacity: var(--star-max, 0.68); }
+}
+
+@keyframes star-breathe {
+  0%, 100% {
+    opacity: 0.48;
+    transform: scale(1.0);
+    box-shadow: 0 0 5px 1px rgba(200, 228, 255, 0.45);
+  }
+  50% {
+    opacity: 0.88;
+    transform: scale(1.28);
+    box-shadow: 0 0 10px 3px rgba(200, 228, 255, 0.72);
+  }
+}
+
+/* ============================================================================
+   Shooting Stars
+   ============================================================================ */
+.shooting-star {
+  position: absolute;
+  height: 1px;
+  border-radius: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 8%,
+    rgba(255, 255, 255, 0.68) 62%,
+    rgba(200, 228, 255, 0.48) 100%
+  );
+  opacity: 0;
+  animation: shoot var(--shoot-dur, 2s) var(--shoot-del, 30s) infinite linear;
+  will-change: transform, opacity, width;
+}
+
+@keyframes shoot {
+  0%, 5%  { opacity: 0; width: 0; transform: rotate(var(--angle, -26deg)) translateX(0); }
+  8%      { opacity: 0.80; width: 38px; }
+  22%     { opacity: 0.65; width: var(--shoot-len, 145px); }
+  35%     { opacity: 0; width: var(--shoot-len, 145px); transform: rotate(var(--angle, -26deg)) translateX(var(--shoot-dist, 580px)); }
+  100%    { opacity: 0; width: 0; transform: rotate(var(--angle, -26deg)) translateX(0); }
+}
+
+/* ============================================================================
+   Particles (capa)
+   ============================================================================ */
+.particles {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--accent-green);
+  opacity: 0;
+  animation: float-particle var(--dur, 9s) var(--del, 0s) infinite linear;
+}
+
+@keyframes float-particle {
+  0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10%  { opacity: 0.5; }
+  90%  { opacity: 0.15; }
+  100% { transform: translateY(-80px) translateX(var(--dx, 0px)); opacity: 0; }
+}
+
+/* ============================================================================
+   Hero Orbs (capa)
+   ============================================================================ */
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.hero-orb-1 {
+  width: 580px; height: 580px;
+  background: radial-gradient(circle, rgba(0,221,179,0.11) 0%, transparent 68%);
+  top: -180px; left: -140px;
+  animation: orb-drift 14s ease-in-out infinite alternate;
+}
+
+.hero-orb-2 {
+  width: 460px; height: 460px;
+  background: radial-gradient(circle, rgba(124,92,252,0.15) 0%, transparent 68%);
+  bottom: -100px; right: -100px;
+  animation: orb-drift 11s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes orb-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(32px, 20px) scale(1.05); }
+}
+
+/* ============================================================================
+   Section Orbs
+   ============================================================================ */
+.section-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0;
+}
+
+.present .section-orb-1 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, var(--orb-color, rgba(0,221,179,0.15)) 0%, transparent 70%);
+  top: -100px; left: -100px;
+  animation: section-orb-drift 12s ease-in-out infinite alternate, fade-in 1s ease forwards;
+}
+
+.present .section-orb-2 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, var(--orb-color, rgba(56,200,250,0.15)) 0%, transparent 70%);
+  bottom: -50px; right: -50px;
+  animation: section-orb-drift 10s ease-in-out infinite alternate-reverse, fade-in 1s ease forwards;
+  animation-delay: 0.5s;
+}
+
+@keyframes section-orb-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, 30px) scale(1.1); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================================================
+   Section Cosmos (cometas + micro-estrelas por slide)
+   ============================================================================ */
+.section-cosmos {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.section-cosmos .comet {
+  position: absolute;
+  height: 1.5px;
+  left: 110%;
+  border-radius: 1px;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.section-cosmos .sp-star {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50%;
+  opacity: 0;
+  will-change: opacity, transform;
+}
+
+.section-cosmos .sp-star.lg {
+  width: 3px; height: 3px;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+}
+
+/* ============================================================================
+   Slide Navigation Hint
+   ============================================================================ */
+.slide-nav-hint {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.48em;
+  color: var(--text-muted);
+  margin-top: 1.2em;
+  opacity: 0.6;
+}
+
+/* ============================================================================
+   Lucide Icons
+   ============================================================================ */
+svg.lucide {
+  display: inline-block;
+  vertical-align: middle;
+  flex-shrink: 0;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  width: 1em;
+  height: 1em;
+}
+
+.card-icon svg.lucide {
+  width: 1.8em;
+  height: 1.8em;
+  display: block;
+  margin-bottom: 0.4em;
+  color: var(--accent-green);
+}
+
+.sumario-card .icon svg.lucide {
+  width: 1.65em;
+  height: 1.65em;
+  display: block;
+  margin: 0 auto 0.28em auto;
+  color: var(--accent-green);
+}
+
+.section-icon svg.lucide {
+  width: 1em;
+  height: 1em;
+}
+
+.section-page-icon svg.lucide {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.icon-list .icon svg.lucide {
+  width: 1.2em;
+  height: 1.2em;
+  color: var(--accent-green);
+}
+
+/* ============================================================================
+   Accessibility — prefers-reduced-motion
+   ============================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .nebula,
+  .starfield,
+  .section-cosmos,
+  #particles {
+    display: none !important;
+  }
+
+  .particle,
+  .starfield .star,
+  .starfield .shooting-star,
+  .section-cosmos .comet,
+  .section-cosmos .sp-star,
+  .hero-orb,
+  .section-orb {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ============================================================================
+   Responsive
+   ============================================================================ */
+@media screen and (max-width: 768px) {
+  .sumario-grid { grid-template-columns: repeat(2, 1fr) !important; }
+  .card-grid-3  { grid-template-columns: 1fr !important; }
+  .card-grid-2  { grid-template-columns: 1fr !important; }
+  .two-cols     { grid-template-columns: 1fr !important; }
+  .reveal h1    { font-size: 1.7em; }
+  .reveal h2    { font-size: 1.3em; }
+  .capa-title   { font-size: 2.2em; }
+}
